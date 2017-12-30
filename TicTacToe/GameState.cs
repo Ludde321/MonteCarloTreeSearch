@@ -6,7 +6,7 @@ using TicTacToe.Mcts;
 
 namespace TicTacToe
 {
-    public class GameState : IGameState<GameState, Node>
+    public class GameState : IGameState
     {
         public bool WhiteToMove {get;set;}
         public ushort BlackStones;
@@ -17,13 +17,14 @@ namespace TicTacToe
             WhiteToMove = true;
         }
 
-        public GameState Copy()
+        public IGameState Copy()
         {
             return new GameState { BlackStones = BlackStones, WhiteStones = WhiteStones, WhiteToMove = WhiteToMove };
         }
 
-        public void Play(Node node)
+        public void Play(INode node2)
         {
+            var node = (Node)node2;
             if (WhiteToMove)
                 WhiteStones |= (ushort)(1 << node.StoneTo);
             else
@@ -32,9 +33,9 @@ namespace TicTacToe
             WhiteToMove = !WhiteToMove;
         }
 
-        public Node[] FindMoves()
+        public INode[] FindMoves()
         {
-            var moves = new List<Node>(9);
+            var moves = new List<INode>(9);
             for (byte i = 0; i < 9; i++)
             {
                 if (((BlackStones | WhiteStones) & (1 << i)) == 0)
@@ -45,9 +46,17 @@ namespace TicTacToe
 
         public void RandomPlay(Random rnd)
         {
-            var moves = FindMoves();
-            var move = moves[rnd.Next(moves.Length)];
-            Play(move);
+            var moves = new byte[9];
+            byte numMoves = 0;
+            for (byte i = 0; i < 9; i++)
+            {
+                if (((BlackStones | WhiteStones) & (1 << i)) == 0)
+                    moves[numMoves++] = i;
+            }
+
+            var stoneTo = moves[rnd.Next(numMoves)];
+
+            Play(new Node { StoneTo = stoneTo});
         }
 
         public bool IsGameFinished(out int score)

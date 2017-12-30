@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TicTacToe
+namespace TicTacToe.Extensions
 {
     public static class ListExtensions
     {

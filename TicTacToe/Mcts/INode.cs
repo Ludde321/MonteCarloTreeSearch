@@ -4,16 +4,16 @@ using System.Linq;
 
 namespace TicTacToe.Mcts
 {
-    public interface INode<TNode> where TNode : INode<TNode>
+    public interface INode
     {
         long NumVisits {get;set;}
         long Score {get;set;}
 
-        TNode[] Children {get;set;}
+        INode[] Children {get;set;}
 
-        double ComputeUtc(TNode child);
+        double ComputeUtc(INode child);
 
-        TNode SelectPromisingNode();
+        INode SelectPromisingNode();
     }
 
 }

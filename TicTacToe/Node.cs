@@ -5,30 +5,29 @@ using TicTacToe.Mcts;
 
 namespace TicTacToe
 {
-    public class Node : INode<Node>
+    public class Node : INode
     {
         public long NumVisits {get;set;}
 
         public long Score {get;set;}
 
-        public Node[] Children {get;set;}
+        public INode[] Children {get;set;}
 
         public byte StoneTo;
 
         public const double C = 1.4142135623730950488016887242097;
 
-
-        public double ComputeUtc(Node child)
+        public double ComputeUtc(INode child)
         {
             return child.Score / (double)child.NumVisits + C * Math.Sqrt(Math.Log(NumVisits) / child.NumVisits);
         }
 
-        public Node SelectPromisingNode()
+        public INode SelectPromisingNode()
         {
             Node bestChild = null;
             double bestUtc = double.MinValue;
 
-            foreach(var child in Children)
+            foreach(Node child in Children)
             {
                 if(child.NumVisits == 0)
                     return child;

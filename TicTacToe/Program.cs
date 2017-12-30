@@ -10,7 +10,7 @@ namespace TicTacToe
         {
             Console.WriteLine("Hello World!");
 
-            var searcher = new TicTacToeSearcher();
+            var searcher = new MonteCarloSearcher();
 
             var rootState = new GameState();
 
@@ -18,13 +18,11 @@ namespace TicTacToe
             {
                 var sw = Stopwatch.StartNew();
                 var rootNode = new Node();
-                searcher.Test(rootNode, rootState, 800000);
+                var bestMove = searcher.GetBestMove(rootNode, rootState, 10000);
 
                 Console.WriteLine($"Time used: {sw.Elapsed}");
 
-                var useNode = rootNode.SelectPromisingNode();
-
-                rootState.Play(useNode);
+                rootState.Play(bestMove);
 
                 Console.WriteLine(rootState);
 

@@ -1,18 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TicTacToe.Extensions;
 
 namespace TicTacToe.Mcts
 {
-    public abstract class Searcher<TGameState, TNode>
-        where TGameState : IGameState<TGameState, TNode>
-        where TNode : INode<TNode>, new()
+    public class MonteCarloSearcher
     {
         protected readonly Random _random = new Random();
 
-        public void Test(TNode rootNode, TGameState rootState, int iterations)
+        public INode GetBestMove(INode rootNode, IGameState rootState, int iterations)
         {
-            var path = new List<TNode>();
+            var path = new List<INode>();
 
             for (int i = 0; i < iterations; i++)
             {
@@ -33,9 +32,10 @@ namespace TicTacToe.Mcts
 
                 BackPropogation(path, score, rootState.WhiteToMove);
             }
+            return rootNode.SelectPromisingNode();
         }
 
-        public TNode SelectPromisingNodes(List<TNode> path, TGameState gameState, TNode node)
+        public INode SelectPromisingNodes(List<INode> path, IGameState gameState, INode node)
         {
             path.Clear();
             path.Add(node);
@@ -49,13 +49,13 @@ namespace TicTacToe.Mcts
             return node;
         }
 
-        public void ExpandNode(TGameState gameState, TNode node)
+        public void ExpandNode(IGameState gameState, INode node)
         {
             node.Children = gameState.FindMoves();
             node.Children.Shuffle(_random);
         }
 
-        public void BackPropogation(List<TNode> path, int score, bool whiteToMove)
+        public void BackPropogation(List<INode> path, int score, bool whiteToMove)
         {
             foreach (var node in path)
             {
@@ -70,7 +70,7 @@ namespace TicTacToe.Mcts
             }
         }
 
-        public int SimulateRandomPlayout(TGameState gameState)
+        public int SimulateRandomPlayout(IGameState gameState)
         {
             int score;
             while (!gameState.IsGameFinished(out score))

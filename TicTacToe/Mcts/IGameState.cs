@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace TicTacToe.Mcts
 {
-    public interface IGameState<TGameState, TNode> where TGameState : IGameState<TGameState, TNode>
+    public interface IGameState
     {
         bool WhiteToMove {get;set;}
 
-        TNode[] FindMoves();
-        void Play(TNode node);
+        INode[] FindMoves();
+        void Play(INode node);
         void RandomPlay(Random rnd);
-        TGameState Copy();
+        IGameState Copy();
         bool IsGameFinished(out int score);
     }
 }
