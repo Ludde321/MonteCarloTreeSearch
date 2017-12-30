@@ -18,7 +18,7 @@ namespace TicTacToe
             {
                 var sw = Stopwatch.StartNew();
                 var rootNode = new Node();
-                var bestMove = searcher.GetBestMove(rootNode, rootState, 10000);
+                var bestMove = searcher.GetBestMove(rootNode, rootState, 100000);
 
                 Console.WriteLine($"Time used: {sw.Elapsed}");
 

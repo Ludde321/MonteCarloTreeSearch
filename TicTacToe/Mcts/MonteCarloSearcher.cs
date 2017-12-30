@@ -11,16 +11,16 @@ namespace TicTacToe.Mcts
 
         public INode GetBestMove(INode rootNode, IGameState rootState, int iterations)
         {
-            var path = new List<INode>();
-
             for (int i = 0; i < iterations; i++)
             {
                 var gameState = rootState.Copy();
 
-                var node = SelectPromisingNodes(path, gameState, rootNode);
+                var path = SelectPromisingNodes(gameState, rootNode);
 
                 if (!gameState.IsGameFinished(out int score))
                 {
+                    var node = path.Last();
+                    
                     ExpandNode(gameState, node);
 
                     node = node.Children.First();
@@ -35,9 +35,9 @@ namespace TicTacToe.Mcts
             return rootNode.SelectPromisingNode();
         }
 
-        public INode SelectPromisingNodes(List<INode> path, IGameState gameState, INode node)
+        public List<INode> SelectPromisingNodes(IGameState gameState, INode node)
         {
-            path.Clear();
+            var path = new List<INode>();
             path.Add(node);
 
             while (node.Children != null)
@@ -46,7 +46,7 @@ namespace TicTacToe.Mcts
                 gameState.Play(node);
                 path.Add(node);
             }
-            return node;
+            return path;
         }
 
         public void ExpandNode(IGameState gameState, INode node)
